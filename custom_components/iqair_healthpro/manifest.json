@@ -1,0 +1,29 @@
+{
+  "domain": "iqair_healthpro",
+  "name": "IQAir HealthPro (BLE)",
+  "bluetooth": [
+    {
+      "manufacturer_id": 1546,
+      "connectable": true
+    },
+    {
+      "local_name": "IQAir*",
+      "connectable": true
+    }
+  ],
+  "codeowners": [
+    "@dipseth"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "bluetooth_adapters"
+  ],
+  "documentation": "https://github.com/dipseth/iqair_healthpro_ble",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/dipseth/iqair_healthpro_ble/issues",
+  "requirements": [
+    "bleak-retry-connector>=3.5.0"
+  ],
+  "version": "0.1.0"
+}

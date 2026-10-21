@@ -1,0 +1,62 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "confirm": {
+        "description": "Set up {name}? Home Assistant will hold the purifier's Bluetooth connection open, poll air quality locally, and control power, fan speed, Auto mode and the display light (no IQAir cloud).\n\nThe Bluetooth adapter must already be paired with the purifier using the 6-digit code from the unit (see the README)."
+      },
+      "user": {
+        "data": { "address": "Purifier" }
+      }
+    },
+    "error": {
+      "not_paired": "The purifier refused the connection because this Bluetooth adapter is not paired with it. Pair once with the unit's 6-digit code (see the README), then try again.",
+      "cannot_connect": "Could not talk to the purifier. Make sure it is powered and in range, and that no other device is connected to it over Bluetooth.",
+      "unknown": "Unexpected error; check the logs."
+    },
+    "abort": {
+      "no_devices_found": "No IQAir purifier found in Bluetooth range.",
+      "already_configured": "This purifier is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Poll interval (seconds)",
+          "source": "Bluetooth adapter / proxy"
+        },
+        "description": "Pairing is stored in each Bluetooth adapter. If the purifier is paired with one specific adapter or proxy, pin the connection to it here."
+      }
+    }
+  },
+  "entity": {
+    "fan": {
+      "purifier": {
+        "state_attributes": {
+          "preset_mode": { "state": { "auto": "Auto" } }
+        }
+      }
+    },
+    "sensor": {
+      "fan_percent": { "name": "Fan speed" },
+      "fan_rpm": { "name": "Fan RPM" },
+      "cadr": { "name": "Clean air delivery rate" },
+      "filter_main": { "name": "HyperHEPA filter life" },
+      "filter_pre": { "name": "Pre-filter life" },
+      "filter_gas": { "name": "Gas & odor filter life" },
+      "air_volume": { "name": "Total air cleaned" },
+      "time_on_power": { "name": "Total powered time" },
+      "time_fan_run": { "name": "Total fan run time" },
+      "wifi_rssi": { "name": "Wi-Fi signal" }
+    },
+    "switch": {
+      "auto": { "name": "Auto mode" },
+      "light": { "name": "Display light" }
+    },
+    "binary_sensor": {
+      "connected": { "name": "Connected" },
+      "problem": { "name": "Problem" }
+    }
+  }
+}
