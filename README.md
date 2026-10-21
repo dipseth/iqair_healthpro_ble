@@ -1,4 +1,16 @@
+<p align="center">
+  <img src="custom_components/iqair_healthpro/brand/icon@2x.png" alt="IQAir icon" width="128" height="128">
+</p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="custom_components/iqair_healthpro/brand/dark_logo@2x.png">
+    <img src="custom_components/iqair_healthpro/brand/logo@2x.png" alt="IQAir" width="320">
+  </picture>
+</p>
+
 # IQAir HealthPro (BLE) for Home Assistant
+
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/docs/faq/custom_repositories/)
 
 A **local** Home Assistant integration for the **IQAir HealthPro Plus** air purifier
 (developed against the *HealthPro Plus XE*). It talks to the purifier directly over
@@ -10,7 +22,8 @@ Bluetooth proxy**, whichever hears the purifier best.
 
 > [!NOTE]
 > This is an unofficial, community-built integration. It is not affiliated with or
-> endorsed by IQAir. Use at your own risk.
+> endorsed by IQAir. Use at your own risk. The IQAir name and logo are trademarks of
+> IQAir; they're bundled in `brand/` only so Home Assistant shows the right icon.
 
 ## Features
 
