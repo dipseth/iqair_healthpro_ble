@@ -59,8 +59,10 @@ Bluetooth proxy**, whichever hears the purifier best.
 ## Requirements
 
 - Home Assistant 2024.8.0 or newer
-- An ESPHome Bluetooth proxy (recommended) or a Bluetooth adapter on the HA host within
-  range of the purifier
+- A Bluetooth adapter or proxy in range that can make **connections**: an ESPHome
+  Bluetooth proxy (recommended, pairs automatically) or the HA host's own adapter.
+  Passive-only proxies (e.g. Shelly devices, or an ESPHome proxy with `active: false`)
+  can see the purifier but can't connect to it.
 - Nothing else holding the purifier's Bluetooth connection (e.g. a phone with the IQAir
   app open over Bluetooth). The app keeps working over Wi-Fi/cloud.
 
