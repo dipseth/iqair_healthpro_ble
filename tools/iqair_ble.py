@@ -28,6 +28,7 @@ The machine must already be paired with the purifier (once, with the unit's code
 Needs: pip install bleak
 
 Usage:
+  python tools/iqair_ble.py --dump                 # every dataPoint (identifiers redacted)
   python tools/iqair_ble.py --read                 # connect + read sensors
   python tools/iqair_ble.py --read --ids all       # every known dataPoint
   python tools/iqair_ble.py --connect-only         # just the 0x01/0x81 handshake
@@ -89,7 +90,12 @@ DATAPOINTS = {
 # The Home Assistant-relevant subset; wifi_wifipsw deliberately excluded everywhere.
 SENSOR_IDS = [0x0bcf, 0x0bd0, 0x0bd1, 0x0bb8, 0x0bb9, 0x0bc5, 0x0bd6, 0x07d5, 0x07cf,
               0x1388, 0x1392, 0x139c, 0x139e, 0x1770, 0x1771, 0x1772, 0x03ea, 0x03ed]
-SECRET_IDS = {0x1006}
+SECRET_IDS = {0x1006}   # Wi-Fi password: never printed
+# Identifies the owner/network/unit; redacted by default so a dump is safe to share.
+# Pass --no-redact to see them locally.
+PRIVATE_IDS = {0x03e8, 0x0410, 0x044c, 0x044d, 0x044e, 0x07db, 0x0fcb, 0x1005,
+               0x1008, 0x100c, 0x100d, 0x1018, 0x753f}
+REDACT = True
 
 STATUS = {0x00: "ok", 0x80: "morePacketsFollow", 0xff: "unsolicited", 0xfe: "pending",
           0x01: "error", 0x02: "busy", 0x03: "timeout", 0x04: "accessDenied",
@@ -206,8 +212,8 @@ DECODE = {
 }
 
 def fmt_value(did, v: bytes) -> str:
-    if did in SECRET_IDS:
-        return "<redacted>"
+    if did in SECRET_IDS or (REDACT and did in PRIVATE_IDS):
+        return f"<redacted, {len(v)} bytes>"
     if did in DECODE and v:
         return f"{DECODE[did](v):24s} [{v.hex()}]"
     s = v.hex()
@@ -386,7 +392,12 @@ def main():
                          " (on/off; fan = level 1..6, needs auto=off), or raw 0xID=hex")
     ap.add_argument("--write-mode", choices=["single", "list"], default="single",
                     help="single = 0x14 dpWrite [id][val]; list = 0x16 dpWriteList [id][len][val]")
-    asyncio.run(run(ap.parse_args()))
+    ap.add_argument("--no-redact", action="store_true",
+                    help="show serial, MACs, IP and Wi-Fi network name (hidden by default)")
+    args = ap.parse_args()
+    global REDACT
+    REDACT = not args.no_redact
+    asyncio.run(run(args))
 
 if __name__ == "__main__":
     main()
