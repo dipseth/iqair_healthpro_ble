@@ -41,7 +41,7 @@ Bluetooth proxy**, whichever hears the purifier best.
 
 | Entity | Type | Notes |
 | --- | --- | --- |
-| *(device name)* | fan | Power, speed levels 1–6 (17/33/50/67/83/100%), preset `auto` |
+| *(device name)* | fan | Power, speed levels 1–6 (17/33/50/67/83/100%), preset `auto`. In Auto the speed shown follows the actual motor output, not the last manual level |
 | PM1 / PM2.5 / PM10 | sensor (µg/m³) | |
 | Fan speed | sensor (%) | Actual motor output, including while in Auto |
 | Fan RPM | sensor | |

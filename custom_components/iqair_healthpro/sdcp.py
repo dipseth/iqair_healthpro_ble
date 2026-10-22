@@ -80,6 +80,19 @@ STATIC_IDS = (DP_PRODUCT_NAME, DP_FAN_LEVELS)
 DEFAULT_FAN_LEVELS = (22, 37, 52, 62, 71, 98)
 
 
+def level_for_percent(percent: int, levels=DEFAULT_FAN_LEVELS) -> int:
+    """Map an actual motor percent (DP_FAN_PERCENT) to the closest level 1..6.
+
+    In Auto the purifier drives the motor itself and leaves DP_FAN_LEVEL at the
+    last manual setting, so the real speed has to be read back from the percent.
+    Ties round up (37 vs 52 at 44.5 -> level 3), matching how the unit ramps.
+    """
+    if not levels:
+        levels = DEFAULT_FAN_LEVELS
+    best = min(range(len(levels)), key=lambda i: (abs(levels[i] - percent), -i))
+    return best + 1
+
+
 class SdcpError(Exception):
     """A request failed (no reply, bad CRC, or an error status)."""
 
