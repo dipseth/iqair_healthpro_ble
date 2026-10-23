@@ -46,10 +46,22 @@ class IQAirFan(IQAirEntity, FanEntity):
         return self.coordinator.data.get("power")
 
     @property
+    def _level(self) -> int | None:
+        """Level 1..6 the fan is actually running at.
+
+        DP_FAN_LEVEL is the manual setpoint and freezes while Auto drives the
+        motor, so in Auto derive the level from the measured motor percent.
+        """
+        d = self.coordinator.data
+        if d.get("auto") and d.get("fan_percent") is not None:
+            return sdcp.level_for_percent(d["fan_percent"], d.get("fan_levels"))
+        return d.get("fan_level")
+
+    @property
     def percentage(self) -> int | None:
         if not self.is_on:
             return 0
-        level = self.coordinator.data.get("fan_level")
+        level = self._level
         return ranged_value_to_percentage(SPEED_RANGE, level) if level else None
 
     @property
@@ -59,7 +71,11 @@ class IQAirFan(IQAirEntity, FanEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         d = self.coordinator.data
-        return {"fan_level": d.get("fan_level"), "motor_speed_percent": d.get("fan_percent")}
+        return {
+            "fan_level": self._level,
+            "manual_fan_level": d.get("fan_level"),
+            "motor_speed_percent": d.get("fan_percent"),
+        }
 
     def _power_on(self) -> list[tuple[int, int]]:
         return [] if self.is_on else [(sdcp.DP_STANDBY, 0)]

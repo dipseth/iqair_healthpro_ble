@@ -33,6 +33,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: IQAirConfigEntry) -> boo
         address,
         entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
         source,
+        entry_id=entry.entry_id,
     )
     await coordinator.async_start()
     entry.runtime_data = coordinator

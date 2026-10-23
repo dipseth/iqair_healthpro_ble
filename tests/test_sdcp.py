@@ -66,3 +66,13 @@ def test_decode_controls_and_filters():
 def test_truncated_tlv_raises():
     with pytest.raises(sdcp.SdcpError):
         sdcp.decode_tlv(bytes.fromhex("cf0b0400aa"))
+
+
+def test_level_for_percent_snaps_to_device_table():
+    levels = (22, 37, 52, 62, 71, 98)
+    assert sdcp.level_for_percent(98, levels) == 6
+    assert sdcp.level_for_percent(22, levels) == 1
+    assert sdcp.level_for_percent(0, levels) == 1
+    assert sdcp.level_for_percent(66, levels) == 4
+    assert sdcp.level_for_percent(57, levels) == 4  # exact tie rounds up
+    assert sdcp.level_for_percent(98, None) == 6  # table not read yet -> defaults

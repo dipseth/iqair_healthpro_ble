@@ -41,7 +41,7 @@ Bluetooth proxy**, whichever hears the purifier best.
 
 | Entity | Type | Notes |
 | --- | --- | --- |
-| *(device name)* | fan | Power, speed levels 1–6 (17/33/50/67/83/100%), preset `auto` |
+| *(device name)* | fan | Power, speed levels 1–6 (17/33/50/67/83/100%), preset `auto`. In Auto the speed shown follows the actual motor output, not the last manual level |
 | PM1 / PM2.5 / PM10 | sensor (µg/m³) | |
 | Fan speed | sensor (%) | Actual motor output, including while in Auto |
 | Fan RPM | sensor | |
@@ -130,7 +130,19 @@ request/response protocol. The purifier never streams on its own, so the integra
 4. Sends commands as `dpWrite` frames on the same link, then polls immediately so the
    UI updates within about a second.
 
-The connection is held open with automatic reconnects. See
+The connection is held open with automatic reconnects. Every step has a deadline
+(connect + bond + handshake within 60 s, each request within 6 s), and a watchdog checks
+once a minute that the session task is alive and has made progress recently; if not, it
+restarts the task and logs a warning. After three failed connection attempts in a row the
+integration logs a WARNING with the last error (and again every 30 attempts), so a
+purifier that stays unavailable is explained in the log rather than silent.
+
+**Diagnostics** (device page → ⋮ → *Download diagnostics*) include a `session` block:
+the last connection attempt and error, which adapter/proxy the link used, how many
+attempts have failed in a row, whether the session task is alive, and how many times the
+watchdog had to restart it.
+
+See
 [docs/PROTOCOL.md](docs/PROTOCOL.md) for the frame format, CRC and dataPoint map, and
 [tools/iqair_ble.py](tools/iqair_ble.py) for a standalone command-line client.
 

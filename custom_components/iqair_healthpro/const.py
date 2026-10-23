@@ -19,7 +19,15 @@ DEFAULT_SCAN_INTERVAL = 30  # seconds between polls
 MIN_SCAN_INTERVAL = 5
 MAX_SCAN_INTERVAL = 600
 
-REQUEST_TIMEOUT = 6.0  # seconds to wait for a reply frame
+REQUEST_TIMEOUT = 6.0  # seconds for one request: writes plus the reply frame
+SESSION_SETUP_TIMEOUT = 60.0  # connect + bond check + handshake must finish in this
+DISCONNECT_TIMEOUT = 10.0  # don't let a stuck disconnect hold up teardown
 RECONNECT_DELAY = 20  # seconds between reconnect attempts
-NOT_PAIRED_DELAY = 300  # back off harder when the adapter has no bond
+NOT_PAIRED_DELAY = 300  # back off harder when the host adapter has no bond
 MAX_POLL_FAILURES = 3  # consecutive failed polls before reconnecting
+
+# Watchdog: restart the session task if it exits or stops making progress.
+WATCHDOG_INTERVAL = 60  # seconds between liveness checks
+WATCHDOG_GRACE = 90  # slack on top of the longest legitimate quiet period
+WARN_AFTER_FAILURES = 3  # consecutive failed sessions before logging a WARNING
+WARN_EVERY_FAILURES = 30  # ...and again every N after that (~10 min at 20 s)
